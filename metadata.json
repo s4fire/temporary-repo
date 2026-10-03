@@ -12,8 +12,8 @@
   "url": "miruro.tv",
   "regExp": "^https?[:][/][/]([a-z0-9-]+[.])*miruro[.]tv[/]",
   "version": "1.0.0",
-  "logo": "https://www.miruro.tv/icon-dark-1024x1024.svg?v=1.15.0",
-  "thumbnail": "https://www.miruro.tv/ssj.png",
+  "logo": "https://i.imgur.com/7vfgZmQ.png",
+  "thumbnail": "https://i.imgur.com/YaGM9PR.png",
   "color": "#333333",
   "category": "anime",
   "tags": [
