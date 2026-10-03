@@ -10,7 +10,7 @@ enum ActivityAssets {
 
 presence.on('UpdateData', async () => {
   // Keep the activity scoped to Miruro, even if the script is loaded manually elsewhere.
-  const hostname = window.location.hostname.toLowerCase()
+  const hostname = document.location.hostname.toLowerCase()
   if (hostname !== 'miruro.tv' && !hostname.endsWith('.miruro.tv')) {
     presence.clearActivity()
     return
@@ -22,10 +22,7 @@ presence.on('UpdateData', async () => {
     ?.trim()
 
   // Match Miruro's selected `?ep=` value to the corresponding episode button.
-  // Do not assume the first button in the episode list is the current episode.
-  const selectedEpisode = new URL(window.location.href).searchParams
-    .get('ep')
-    ?.trim()
+  const selectedEpisode = new URL(document.location.href).searchParams.get('ep')?.trim()
   const episodeButtons = document.querySelectorAll<HTMLButtonElement>(
     'button[data-episode-number]',
   )
@@ -58,7 +55,7 @@ presence.on('UpdateData', async () => {
     buttons: [
       {
         label: 'Watch on Miruro',
-        url: window.location.href,
+        url: document.location.href,
       },
     ],
   }
