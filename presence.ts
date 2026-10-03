@@ -21,10 +21,19 @@ presence.on('UpdateData', async () => {
     ?.textContent
     ?.trim()
 
-  // Miruro exposes the current episode number on its episode button.
-  const episodeButton = document.querySelector<HTMLButtonElement>(
+  // Match Miruro's selected `?ep=` value to the corresponding episode button.
+  // Do not assume the first button in the episode list is the current episode.
+  const selectedEpisode = new URL(window.location.href).searchParams
+    .get('ep')
+    ?.trim()
+  const episodeButtons = document.querySelectorAll<HTMLButtonElement>(
     'button[data-episode-number]',
   )
+  const episodeButton = selectedEpisode
+    ? Array.from(episodeButtons).find(
+        button => button.getAttribute('data-episode-number')?.trim() === selectedEpisode,
+      )
+    : undefined
   const episodeNumber = episodeButton
     ?.getAttribute('data-episode-number')
     ?.trim()
