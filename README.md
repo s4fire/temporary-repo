@@ -2,108 +2,233 @@
 
 A custom PreMiD activity for [Miruro](https://www.miruro.tv/) that shows the anime and episode currently being watched in Discord Rich Presence.
 
-## Quick setup — no npm required
+## What this setup does
 
-This repository contains the Miruro activity itself, so you do **not** need to run `npm install` or set up the full PreMiD Activities development repository.
+This setup runs the custom Miruro activity through the PreMiD development environment and automatically starts it in the background when Windows boots.
 
-If you already have the PreMiD browser extension installed:
+You only need to keep **Activity Developer Mode** enabled in PreMiD. You do **not** need to manually open PowerShell and start the activity every time.
 
-1. Open the PreMiD extension.
-2. Go to **Settings → Developer**.
-3. Enable **Activity Developer Mode**.
-4. Open the **Developer** tab.
-5. Click **Load Activity**.
-6. Select the cloned `temporary-repo` folder — the folder containing `metadata.json` and `presence.ts`.
-7. Open Miruro and start watching an episode.
-8. Check Discord for the Rich Presence.
+## Step 1 — Install the prerequisites
 
-PreMiD officially supports loading an uncompiled activity directory this way.
+If they are not already installed, install:
 
-### Windows setup
+- Node.js (LTS)
+- Git
+- PreMiD browser extension
+- Discord
 
-If the repository is already cloned, your PowerShell prompt should be inside:
+Make sure Node.js is added to your Windows PATH during installation.
+
+## Step 2 — Clone the repository
+
+Open PowerShell and run:
+
+```powershell
+cd $HOME
+git clone https://github.com/s4fire/temporary-repo.git
+```
+
+This downloads the repository into:
 
 ```text
-C:\Users\gotta\temporary-repo
+C:\Users\<YourUsername>\temporary-repo
 ```
 
-If needed, run:
+## Step 3 — Enable PreMiD Developer Mode
+
+1. Open Zen Browser.
+2. Open the PreMiD extension.
+3. Open its settings.
+4. Enable **Activity Developer Mode**.
+
+Leave Developer Mode enabled while you want to use the custom Miruro activity.
+
+## Step 4 — Fix the Node.js PATH if needed
+
+If PowerShell says that `node` or `npx` is not recognized, run:
 
 ```powershell
-cd C:\Users\gotta\temporary-repo
+$env:Path += ";C:\Program Files\nodejs"
 ```
 
-Then load the **temporary-repo** folder through PreMiD's Developer tab.
+This tells the current PowerShell session where Node.js and `npx` are installed.
 
-You do **not** need to run:
+## Step 5 — Go to the PreMiD Activities workspace
+
+The working setup uses the PreMiD Activities workspace inside the repository:
 
 ```powershell
-npm install
+cd "$HOME\temporary-repo\Activities"
+```
+
+If your repository is installed somewhere else, replace the path with your actual location.
+
+## Step 6 — Start the Miruro activity
+
+Run:
+
+```powershell
 npx pmd dev "Miruro"
 ```
 
-Those commands are for the full PreMiD Activities development repository, while this repository intentionally contains only the Miruro activity source.
+When the activity starts successfully, PreMiD should connect to the running development activity.
 
-## PreMiD setup
+Now open Miruro in Zen Browser and start watching an episode. Your Discord Rich Presence should update with the Miruro activity.
 
-Before testing the activity:
+### What this command does
 
-1. Install the PreMiD browser extension.
-2. Open the PreMiD extension settings.
-3. Enable **Activity Developer Mode**.
-4. Open the **Developer** tab.
-5. Click **Load Activity**.
-6. Select the `temporary-repo` folder.
-7. Open a Miruro watch page.
-8. Check Discord for the Rich Presence.
+`npx pmd dev "Miruro"`:
 
-The activity detects Miruro watch pages, the anime title, the selected episode, the episode title when available, and the anime artwork when available.
+- Targets the Miruro activity.
+- Compiles `presence.ts` into executable code while the development process is running.
+- Starts the local development connection used by the PreMiD extension.
+- Sends the activity's Rich Presence data through PreMiD to Discord.
 
-## Common errors and fixes
+## Step 7 — Make it start automatically with Windows
 
-### The folder cannot be loaded
+If you do not want to manually open PowerShell and run the command every time, create a Windows Startup shortcut.
 
-Make sure you selected the **temporary-repo folder itself**, not a parent folder and not an individual file.
-
-The selected folder should contain:
+1. Press **Win + R**.
+2. Enter:
+   `shell:startup`
+3. Press Enter.
+4. Right-click inside the folder → **New → Shortcut**.
+5. Use this command, replacing `USER` with your Windows username:
 
 ```text
-temporary-repo/
-├── metadata.json
-├── presence.ts
-└── README.md
+powershell.exe -WindowStyle Hidden -Command "Set-Location 'C:\Users\USER\temporary-repo\Activities'; $env:Path += ';C:\Program Files\nodejs'; npx pmd dev 'Miruro'"
 ```
 
-Also make sure **Activity Developer Mode** is enabled.
+6. Click **Next**.
+7. Name the shortcut something like **PreMiD Miruro Activity**.
+8. Click **Finish**.
 
-### Discord shows nothing
+Windows will then launch the development process automatically when you sign in. The PowerShell window is hidden, so you do not have to keep a visible terminal open.
+
+### What the startup command does
+
+```text
+powershell.exe -WindowStyle Hidden -Command "Set-Location 'C:\Users\USER\temporary-repo\Activities'; $env:Path += ';C:\Program Files\nodejs'; npx pmd dev 'Miruro'"
+```
+
+It:
+
+- Starts PowerShell without showing a window.
+- Moves into the PreMiD Activities workspace.
+- Adds Node.js to the current session's PATH.
+- Starts the Miruro development activity automatically.
+- Keeps the local PreMiD connection running in the background.
+
+This means the activity is available automatically after Windows starts, without you manually opening a terminal.
+
+## What the commands you may encounter actually mean
+
+### Fixing the PATH
+
+```powershell
+$env:Path += ";C:\Program Files\nodejs"
+```
+
+This adds the Node.js installation directory to the current PowerShell session so commands such as `node` and `npx` can be found.
+
+### Commands that did not work
+
+You may see people suggest:
+
+```powershell
+npx @premid/cli build
+npx @premid/dev
+npx pmd build
+```
+
+These are **not required for this setup**. In testing, the standalone npm package approach either failed to resolve the expected package or expected the full PreMiD workspace structure.
+
+The working setup uses the PreMiD Activities workspace and:
+
+```powershell
+npx pmd dev "Miruro"
+```
+
+### Starting the development activity
+
+```powershell
+npx pmd dev "Miruro"
+```
+
+This starts the Miruro activity in development mode and connects it to the PreMiD extension.
+
+### Automatic background startup
+
+```text
+powershell.exe -WindowStyle Hidden -Command "Set-Location 'C:\Users\USER\temporary-repo\Activities'; $env:Path += ';C:\Program Files\nodejs'; npx pmd dev 'Miruro'"
+```
+
+This is simply the same working command automated through Windows Startup, with the PowerShell window hidden.
+
+## Troubleshooting
+
+### `npx` is not recognized
+
+Run:
+
+```powershell
+$env:Path += ";C:\Program Files\nodejs"
+```
+
+Then try the command again.
+
+If that still fails, verify that Node.js is installed and check where it was installed.
+
+### The Activities folder does not exist
+
+Make sure you are using the repository/workspace that contains the PreMiD Activities structure. The command must be run from the directory containing the relevant PreMiD activity workspace.
+
+### The activity does not appear in Discord
 
 Check these in order:
 
-1. Make sure Discord is running.
-2. Make sure the PreMiD extension is running.
-3. Make sure the Miruro activity appears in the PreMiD Developer tab.
-4. Make sure you are on an actual Miruro watch page.
-5. Wait a few seconds for the presence to update.
+1. Discord is running.
+2. PreMiD is installed and enabled.
+3. **Activity Developer Mode** is enabled.
+4. `npx pmd dev "Miruro"` is running successfully.
+5. Zen is open on a Miruro watch page.
+6. Wait a few seconds for the Rich Presence to update.
 
-### Updating an existing installation
+### The Startup shortcut does nothing
 
-Pull the latest version of the activity:
+First run this manually in PowerShell:
 
 ```powershell
-cd temporary-repo
+cd "$HOME\temporary-repo\Activities"
+$env:Path += ";C:\Program Files\nodejs"
+npx pmd dev "Miruro"
+```
+
+If that works, check that the Startup shortcut uses the correct Windows username and repository path.
+
+## Updating the activity
+
+If the activity is updated on GitHub:
+
+```powershell
+cd "$HOME\temporary-repo"
 git pull
 ```
 
-Then reload the activity from the PreMiD Developer tab if it does not update automatically.
+Then restart the running activity if necessary.
 
-## Requirements
+## Important
 
-- Windows PowerShell
-- Git
-- Node.js 20+
-- PreMiD browser extension
-- PreMiD Activity Developer Mode enabled
-- Discord
+You must keep **Activity Developer Mode enabled** in PreMiD for this custom development activity to work.
 
-Official PreMiD documentation recommends Node.js 20+ and the `npx pmd dev <activity-name>` workflow for developing Activities.
+The Windows Startup shortcut is what makes the development process start automatically. You do not need to manually launch PowerShell after it has been configured.
+
+## Need help?
+
+If something goes wrong, copy this entire README and paste it into Gemini. Tell Gemini what you were trying to do and include the **exact error message** you received.
+
+For example:
+
+> I am following this README to set up the Miruro PreMiD activity. I got this error: [paste the exact error here]
+
+**Do not paraphrase the error if you can avoid it — paste the exact PowerShell/terminal output.** That gives Gemini much more useful information for figuring out what went wrong.
