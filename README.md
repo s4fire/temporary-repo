@@ -1,6 +1,6 @@
 # Miruro PreMiD Activity
 
-A custom PreMiD activity for [Miruro](https://www.miruro.tv/) that shows the anime and episode currently being watched in Discord Rich Presence.
+A custom PreMiD activity for [Miruro](https://barelystarted.miruro.tv/) that shows the anime and episode currently being watched in Discord Rich Presence.
 
 ## What this setup does
 
@@ -73,7 +73,7 @@ npx pmd dev "Miruro"
 
 When the activity starts successfully, PreMiD should connect to the running development activity.
 
-Now open Miruro in Zen Browser and start watching an episode. Your Discord Rich Presence should update with the Miruro activity.
+Now open [https://barelystarted.miruro.tv/](https://barelystarted.miruro.tv/) in Zen Browser and start watching an episode. Your Discord Rich Presence should update with the Miruro activity.
 
 ### What this command does
 
@@ -191,7 +191,7 @@ Check these in order:
 2. PreMiD is installed and enabled.
 3. **Activity Developer Mode** is enabled.
 4. `npx pmd dev "Miruro"` is running successfully.
-5. Zen is open on a Miruro watch page.
+5. Zen is open on [https://barelystarted.miruro.tv/](https://barelystarted.miruro.tv/).
 6. Wait a few seconds for the Rich Presence to update.
 
 ### The Startup shortcut does nothing
